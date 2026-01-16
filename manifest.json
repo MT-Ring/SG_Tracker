@@ -8,9 +8,10 @@
       "sizes": "192x192"
     }
   ],
-  "start_url": "sg_tracker.html",
+  "start_url": "index.html",
   "background_color": "#f0f2f5",
   "display": "standalone",
   "scope": "./",
   "theme_color": "#2e7d32"
+
 }
