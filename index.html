@@ -9,38 +9,43 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="SG Log">
-    <link rel="apple-touch-icon" href="https://via.placeholder.com/192/2e7d32/ffffff?text=Golf">
+    <link rel="apple-touch-icon" href="icon-192.png">
 
     <style>
         :root { --safe-area-top: env(safe-area-inset-top); }
         body { 
-            font-family: -apple-system, system-ui, BlinkMacSystemFont, sans-serif; 
+            font-family: -apple-system, system-ui, sans-serif; 
             background-color: #f0f2f5; 
             margin: 0; 
             padding: calc(15px + var(--safe-area-top)) 15px 40px 15px; 
-            -webkit-tap-highlight-color: transparent;
         }
         .container { max-width: 600px; margin: auto; }
         .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .meta-input { padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; background: white; width: 100%; box-sizing: border-box; }
-        .grid { display: grid; grid-template-columns: 40px 1.2fr 2fr; gap: 10px; margin-bottom: 25px; align-items: center; }
-        .header { font-weight: bold; text-align: center; background: #333; color: white; padding: 12px; border-radius: 6px; font-size: 14px; }
-        .shot-num { font-weight: bold; color: #444; text-align: center; font-size: 18px; }
+        .meta-input { padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; width: 100%; box-sizing: border-box; }
         
-        input { padding: 16px; font-size: 18px; border: 1px solid #ccc; border-radius: 12px; text-align: center; width: 85%; background: white; }
-        .lie-selector { display: flex; gap: 4px; justify-content: center; }
-        .lie-btn { flex: 1; padding: 12px 0; border: 1px solid #ccc; background: #fff; border-radius: 8px; font-weight: bold; font-size: 14px; color: #333; }
+        /* Fixed Grid Layout */
+        .grid { display: grid; grid-template-columns: 35px 1fr 1.8fr; gap: 8px; margin-bottom: 25px; align-items: center; }
+        .header { font-weight: bold; text-align: center; background: #333; color: white; padding: 10px; border-radius: 6px; font-size: 13px; }
+        
+        input.dist { padding: 12px; font-size: 16px; border: 1px solid #ccc; border-radius: 10px; text-align: center; width: 100%; box-sizing: border-box; }
+        
+        /* Adjusted Lie Buttons */
+        .lie-selector { display: flex; gap: 2px; justify-content: flex-start; }
+        .lie-btn { flex: 1; padding: 10px 0; border: 1px solid #ccc; background: #fff; border-radius: 6px; font-weight: bold; font-size: 12px; color: #333; -webkit-appearance: none; }
         .lie-btn.active { background: #333; color: #fff; border-color: #333; }
 
-        button.action { padding: 20px; font-size: 18px; border: none; border-radius: 15px; color: white; font-weight: bold; margin-bottom: 12px; width: 100%; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        button.action { padding: 18px; font-size: 18px; border: none; border-radius: 15px; color: white; font-weight: bold; margin-bottom: 12px; width: 100%; }
         #NextBtn { background: #1976d2; }
         #EndBtn { background: #d32f2f; }
         #StartBtn { background: #2e7d32; }
         
-        .hole-input { background: #fffde7; font-weight: bold; border: 3px solid #fbc02d; color: #000; }
-        h2 { text-align: center; margin: 10px 0 20px 0; font-size: 26px; }
-        #history { margin-top: 25px; padding: 20px; border-top: 2px solid #ddd; background: #fff; border-radius: 15px; }
-        .history-item { display: inline-block; background: #f8f9fa; padding: 10px 15px; margin: 5px; border-radius: 10px; font-size: 14px; border: 1px solid #dee2e6; font-weight: 500; }
+        .hole-input { background: #fffde7; font-weight: bold; border: 2px solid #fbc02d; color: #000; padding: 10px; border-radius: 8px; width: 100%; text-align: center; }
+        
+        /* Total Strokes Box */
+        #totalBox { background: #333; color: white; padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 15px; font-size: 20px; font-weight: bold; }
+        
+        #history { margin-top: 20px; padding: 15px; background: #fff; border-radius: 15px; border: 1px solid #ddd; }
+        .history-item { display: inline-block; background: #f8f9fa; padding: 8px 12px; margin: 4px; border-radius: 8px; font-size: 13px; border: 1px solid #dee2e6; }
     </style>
 </head>
 <body>
@@ -50,19 +55,20 @@
             <input type="date" id="roundDate" class="meta-input" onchange="saveToPhone()">
         </div>
 
-        <h2 id="status">Hole 1 of 18</h2>
+        <div id="totalBox">Total Strokes: <span id="totalStrokes">0</span></div>
+        <h2 id="status" style="text-align:center; margin: 10px 0;">Hole 1</h2>
 
         <div class="grid" id="shotGrid">
-            <div></div><div class="header">Distance</div><div class="header">Lie</div>
-            <div class="shot-num">H</div>
+            <div></div><div class="header">Dist</div><div class="header">Lie</div>
+            <div style="font-weight:bold; text-align:center;">H</div>
             <input type="number" id="holeNum" class="hole-input" value="1">
             <div style="visibility: hidden;">-</div>
             <div id="shotRows" style="display: contents;"></div>
         </div>
 
         <button class="action" id="NextBtn" onclick="nextHole()">Save Hole & Next</button>
-        <button class="action" id="EndBtn" onclick="endRound()">End Round & Download CSV</button>
-        <button class="action" id="StartBtn" onclick="startRound()">Start New Round</button>
+        <button class="action" id="EndBtn" onclick="endRound()">End & Download CSV</button>
+        <button class="action" id="StartBtn" onclick="startRound()">New Round</button>
 
         <div id="history">
             <strong>Logged Holes:</strong>
@@ -74,7 +80,6 @@
         var roundData = [];
         var currentHoleCount = 1;
 
-        // --- PERSISTENCE LOGIC ---
         function saveToPhone() {
             const data = {
                 roundData: roundData,
@@ -101,7 +106,6 @@
             }
         }
 
-        // --- CORE LOGIC ---
         function createLieSelector() {
             const wrapper = document.createElement('div');
             wrapper.className = 'lie-selector';
@@ -126,7 +130,7 @@
             document.getElementById('holeNum').value = currentHoleCount;
             for(var i=1; i<=10; i++) {
                 var label = document.createElement('div');
-                label.className = 'shot-num'; label.innerText = i;
+                label.style.textAlign = 'center'; label.style.fontWeight = 'bold'; label.innerText = i;
                 var d = document.createElement('input');
                 d.type = 'number'; d.className = 'dist'; d.placeholder = '0';
                 d.onchange = saveToPhone;
@@ -139,7 +143,7 @@
         }
 
         function startRound() {
-            if(confirm("Clear current round and start over?")) {
+            if(confirm("Start a new round? This clears current data.")) {
                 localStorage.removeItem('golf_tracker_save');
                 roundData = []; currentHoleCount = 1; 
                 document.getElementById('courseName').value = "";
@@ -175,17 +179,25 @@
 
         function updateHistory() {
             var list = document.getElementById('historyList');
-            if(roundData.length === 0) { list.innerHTML = 'None yet'; return; }
+            var totalDisp = document.getElementById('totalStrokes');
+            if(roundData.length === 0) { 
+                list.innerHTML = 'None yet'; 
+                totalDisp.innerText = '0';
+                return; 
+            }
             var html = '';
+            var runningTotal = 0;
             for(var i=0; i<roundData.length; i++) {
-                html += '<div class="history-item">Hole '+roundData[i].hole+' ('+roundData[i].shots+'s)</div>';
+                html += '<div class="history-item">Hole '+roundData[i].hole+': <b>'+roundData[i].shots+'</b></div>';
+                runningTotal += roundData[i].shots;
             }
             list.innerHTML = html;
+            totalDisp.innerText = runningTotal;
         }
 
         function endRound() {
             if(roundData.length === 0) return alert("No data recorded!");
-            var course = document.getElementById('courseName').value || "GolfRound";
+            var course = document.getElementById('courseName').value || "SG_Log";
             var date = document.getElementById('roundDate').value;
             var csv = course + "," + date + "\n";
             for(var i=0; i<11; i++) {
@@ -200,20 +212,18 @@
             var url = URL.createObjectURL(blob);
             var a = document.createElement('a');
             a.href = url;
-            a.download = course.replace(/\s+/g, '_') + "_" + date + ".csv";
+            a.download = "SGLog_" + course.replace(/\s+/g, '_') + "_" + date + ".csv";
             a.click();
         }
 
         function render() {
-            document.getElementById('status').innerText = "Hole " + currentHoleCount + " of 18";
+            document.getElementById('status').innerText = "Hole " + currentHoleCount;
             setupRows();
         }
 
-        // SW Registration
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js');
         }
-
         window.onload = loadFromPhone;
     </script>
 </body>
