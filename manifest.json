@@ -1,6 +1,6 @@
 {
   "short_name": "SG Log",
-  "name": "SG Log - Data",
+  "name": "SG Log Tracker",
   "icons": [
     {
       "src": "icon-192.png",
@@ -13,5 +13,5 @@
   "display": "standalone",
   "scope": "./",
   "theme_color": "#2e7d32"
-
 }
+
