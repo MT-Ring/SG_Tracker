@@ -198,9 +198,9 @@
             totalDisp.innerText = runningTotal;
         }
 
-        // --- NEW VERTICAL EXPORT (Matches Screenshot) ---
+// --- UPDATED EXPORT (Padded to 10 entries per hole) ---
         function endRound() {
-            if(roundData.length === 0) return alert("No data recorded!");
+            if (roundData.length === 0) return alert("No data recorded!");
             var course = document.getElementById('courseName').value || "SG_Log";
             var date = document.getElementById('roundDate').value;
             
@@ -210,15 +210,16 @@
             // Loop through stored holes
             for (var i = 0; i < roundData.length; i++) {
                 var holeObj = roundData[i];
-                // Loop through shots (1 to 10)
+                
+                // Always loop exactly 10 times per hole to ensure padding
                 for (var s = 1; s <= 10; s++) {
                     var dist = holeObj.dCol[s] || "0";
                     var lie = holeObj.lCol[s] || "g";
                     
-                    // Only log rows that have a distance
-                    if (dist !== "0" && dist !== "") {
-                        csv += holeObj.hole + "," + dist + "," + lie + "\n";
-                    }
+                    // If distance was left blank, ensure it stays "0"
+                    if (dist === "") dist = "0";
+                    
+                    csv += holeObj.hole + "," + dist + "," + lie + "\n";
                 }
             }
 
@@ -242,3 +243,4 @@
     </script>
 </body>
 </html>
+
