@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>SG Log</title>
+    <title>SG Log v2.1</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -17,52 +17,51 @@
             font-family: -apple-system, system-ui, sans-serif; 
             background-color: #f0f2f5; 
             margin: 0; 
-            padding: calc(15px + var(--safe-area-top)) 15px 40px 15px; 
+            padding: calc(15px + var(--safe-area-top)) 10px 40px 10px; 
             -webkit-tap-highlight-color: transparent;
         }
         .container { max-width: 600px; margin: auto; }
-        .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         .meta-input { padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; width: 100%; box-sizing: border-box; }
         
-        /* Grid Layout Fixes */
-        .grid { display: grid; grid-template-columns: 35px 1fr 1.8fr; gap: 8px; margin-bottom: 25px; align-items: center; }
-        .header { font-weight: bold; text-align: center; background: #333; color: white; padding: 10px; border-radius: 6px; font-size: 13px; }
+        /* Updated Grid for 4 Columns: #, Club, Dist, Lie */
+        .grid { display: grid; grid-template-columns: 30px 55px 70px 1fr; gap: 5px; margin-bottom: 20px; align-items: center; }
+        .header { font-weight: bold; text-align: center; background: #333; color: white; padding: 8px 2px; border-radius: 4px; font-size: 11px; }
         
-        input.dist { padding: 12px; font-size: 16px; border: 1px solid #ccc; border-radius: 10px; text-align: center; width: 100%; box-sizing: border-box; }
+        input.cell-input { padding: 10px 2px; font-size: 16px; border: 1px solid #ccc; border-radius: 8px; text-align: center; width: 100%; box-sizing: border-box; }
         
-        /* Smaller Lie Buttons to prevent overlap */
-        .lie-selector { display: flex; gap: 2px; justify-content: flex-start; }
-        .lie-btn { flex: 1; padding: 10px 0; border: 1px solid #ccc; background: #fff; border-radius: 6px; font-weight: bold; font-size: 12px; color: #333; -webkit-appearance: none; }
+        /* Lie Selector with 6 buttons (T, F, R, G, S, X) */
+        .lie-selector { display: flex; gap: 1px; justify-content: flex-start; }
+        .lie-btn { flex: 1; padding: 10px 0; border: 1px solid #ccc; background: #fff; border-radius: 4px; font-weight: bold; font-size: 11px; color: #333; -webkit-appearance: none; }
         .lie-btn.active { background: #333; color: #fff; border-color: #333; }
 
-        button.action { padding: 18px; font-size: 18px; border: none; border-radius: 15px; color: white; font-weight: bold; margin-bottom: 12px; width: 100%; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        button.action { padding: 18px; font-size: 18px; border: none; border-radius: 15px; color: white; font-weight: bold; margin-bottom: 12px; width: 100%; }
         #NextBtn { background: #1976d2; }
         #EndBtn { background: #d32f2f; }
         #StartBtn { background: #2e7d32; }
         
-        .hole-input { background: #fffde7; font-weight: bold; border: 2px solid #fbc02d; color: #000; padding: 10px; border-radius: 8px; width: 100%; text-align: center; }
+        .hole-input { background: #fffde7; font-weight: bold; border: 2px solid #fbc02d; color: #000; padding: 8px; border-radius: 8px; width: 100%; text-align: center; font-size: 16px; }
         
-        /* Summary UI */
-        #totalBox { background: #333; color: white; padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 15px; font-size: 20px; font-weight: bold; }
+        #totalBox { background: #333; color: white; padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 15px; font-size: 18px; font-weight: bold; }
         #history { margin-top: 20px; padding: 15px; background: #fff; border-radius: 15px; border: 1px solid #ddd; }
-        .history-item { display: inline-block; background: #f8f9fa; padding: 8px 12px; margin: 4px; border-radius: 8px; font-size: 13px; border: 1px solid #dee2e6; font-weight: 500; }
+        .history-item { display: inline-block; background: #f8f9fa; padding: 6px 10px; margin: 3px; border-radius: 6px; font-size: 12px; border: 1px solid #dee2e6; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="meta-grid">
-            <input type="text" id="courseName" class="meta-input" placeholder="Course Name" onchange="saveToPhone()">
+            <input type="text" id="courseName" class="meta-input" placeholder="Course" onchange="saveToPhone()">
             <input type="date" id="roundDate" class="meta-input" onchange="saveToPhone()">
         </div>
 
         <div id="totalBox">Total Strokes: <span id="totalStrokes">0</span></div>
-        <h2 id="status" style="text-align:center; margin: 10px 0;">Hole 1</h2>
+        <h2 id="status" style="text-align:center; margin: 10px 0; font-size: 18px;">Hole 1</h2>
 
         <div class="grid" id="shotGrid">
-            <div></div><div class="header">Dist</div><div class="header">Lie</div>
-            <div style="font-weight:bold; text-align:center;">H</div>
+            <div></div><div class="header">Club</div><div class="header">Dist</div><div class="header">Lie</div>
+            <div style="font-weight:bold; text-align:center; font-size: 12px;">H</div>
             <input type="number" id="holeNum" class="hole-input" value="1">
-            <div style="visibility: hidden;">-</div>
+            <div style="visibility: hidden;">-</div><div style="visibility: hidden;">-</div>
             <div id="shotRows" style="display: contents;"></div>
         </div>
 
@@ -71,7 +70,7 @@
         <button class="action" id="StartBtn" onclick="startRound()">New Round</button>
 
         <div id="history">
-            <strong>Logged Holes:</strong>
+            <strong>Logged:</strong>
             <div id="historyList" style="margin-top:10px;">None yet</div>
         </div>
     </div>
@@ -80,7 +79,6 @@
         var roundData = [];
         var currentHoleCount = 1;
 
-        // --- PERSISTENCE ---
         function saveToPhone() {
             const data = {
                 roundData: roundData,
@@ -107,11 +105,11 @@
             }
         }
 
-        // --- UI RENDERERS ---
         function createLieSelector() {
             const wrapper = document.createElement('div');
             wrapper.className = 'lie-selector';
-            ['T','F','R','G'].forEach(val => {
+            // Added S and X to the array
+            ['T','F','R','G','S','X'].forEach(val => {
                 const btn = document.createElement('button');
                 btn.className = 'lie-btn';
                 btn.innerText = val;
@@ -133,45 +131,53 @@
             for(var i=1; i<=10; i++) {
                 var label = document.createElement('div');
                 label.style.textAlign = 'center'; label.style.fontWeight = 'bold'; label.innerText = i;
-                var d = document.createElement('input');
-                d.type = 'number'; d.className = 'dist'; d.placeholder = '0';
-                d.onchange = saveToPhone;
-                var l = createLieSelector();
-                l.className += ' lie-container';
+                
+                var club = document.createElement('input');
+                club.type = 'text'; club.className = 'cell-input club-input'; club.placeholder = '-';
+                club.onchange = saveToPhone;
+
+                var dist = document.createElement('input');
+                dist.type = 'number'; dist.className = 'cell-input dist-input'; dist.placeholder = '0';
+                dist.onchange = saveToPhone;
+
+                var lie = createLieSelector();
+                lie.className += ' lie-container';
+
                 container.appendChild(label);
-                container.appendChild(d);
-                container.appendChild(l);
+                container.appendChild(club);
+                container.appendChild(dist);
+                container.appendChild(lie);
             }
         }
 
-        // --- GAME ACTIONS ---
         function startRound() {
-            if(confirm("Start a new round? This clears all current data.")) {
+            if(confirm("New round?")) {
                 localStorage.removeItem('golf_tracker_save');
                 roundData = []; currentHoleCount = 1; 
-                document.getElementById('courseName').value = "";
                 render(); updateHistory();
             }
         }
 
         function nextHole() {
             var hVal = document.getElementById('holeNum').value;
-            var ds = document.getElementsByClassName('dist');
+            var clubs = document.getElementsByClassName('club-input');
+            var dists = document.getElementsByClassName('dist-input');
             var lContainers = document.getElementsByClassName('lie-container');
-            var dCol = [hVal];
-            var lCol = [""];
+            
+            var holeShots = [];
             var sCount = 0;
 
             for(var i=0; i<10; i++) {
-                var d = ds[i].value || "0";
+                var c = clubs[i].value || "-";
+                var d = dists[i].value || "0";
                 var activeBtn = lContainers[i].querySelector('.active');
                 var l = activeBtn ? activeBtn.innerText.toLowerCase() : "g";
-                dCol.push(d);
-                lCol.push(l);
+                
+                holeShots.push({ club: c, dist: d, lie: l });
                 if(d !== "0" && d !== "") sCount++;
             }
             
-            roundData.push({dCol: dCol, lCol: lCol, hole: hVal, shots: sCount});
+            roundData.push({ hole: hVal, shots: holeShots, totalShotCount: sCount });
             currentHoleCount = parseInt(hVal) + 1;
             
             saveToPhone();
@@ -191,35 +197,27 @@
             var html = '';
             var runningTotal = 0;
             for(var i=0; i<roundData.length; i++) {
-                html += '<div class="history-item">Hole '+roundData[i].hole+': <b>'+roundData[i].shots+'</b></div>';
-                runningTotal += roundData[i].shots;
+                html += '<div class="history-item">Hole '+roundData[i].hole+': <b>'+roundData[i].totalShotCount+'</b></div>';
+                runningTotal += roundData[i].totalShotCount;
             }
             list.innerHTML = html;
             totalDisp.innerText = runningTotal;
         }
 
-// --- UPDATED EXPORT (Padded to 10 entries per hole) ---
+        // --- PADDED VERTICAL EXPORT (Hole, Club, Dist, Lie) ---
         function endRound() {
-            if (roundData.length === 0) return alert("No data recorded!");
+            if(roundData.length === 0) return alert("No data!");
             var course = document.getElementById('courseName').value || "SG_Log";
             var date = document.getElementById('roundDate').value;
             
-            // CSV Headers
-            var csv = "Hole,Distance,Lie\n";
+            var csv = "Hole,Club,Distance,Lie\n";
 
-            // Loop through stored holes
             for (var i = 0; i < roundData.length; i++) {
                 var holeObj = roundData[i];
-                
-                // Always loop exactly 10 times per hole to ensure padding
-                for (var s = 1; s <= 10; s++) {
-                    var dist = holeObj.dCol[s] || "0";
-                    var lie = holeObj.lCol[s] || "g";
-                    
-                    // If distance was left blank, ensure it stays "0"
-                    if (dist === "") dist = "0";
-                    
-                    csv += holeObj.hole + "," + dist + "," + lie + "\n";
+                for (var s = 0; s < 10; s++) {
+                    var sData = holeObj.shots[s];
+                    var d = sData.dist === "" ? "0" : sData.dist;
+                    csv += holeObj.hole + "," + sData.club + "," + d + "," + sData.lie + "\n";
                 }
             }
 
@@ -227,7 +225,7 @@
             var url = URL.createObjectURL(blob);
             var a = document.createElement('a');
             a.href = url;
-            a.download = "SGLog_" + course.replace(/\s+/g, '_') + "_" + date + ".csv";
+            a.download = "SGLog_" + date + ".csv";
             a.click();
         }
 
@@ -243,4 +241,3 @@
     </script>
 </body>
 </html>
-
